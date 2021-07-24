@@ -13,7 +13,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class GithubAsyncApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GithubAsyncApplication.class, args).close();
+        SpringApplication.run(GithubAsyncApplication.class, args);
     }
 
     @Bean
