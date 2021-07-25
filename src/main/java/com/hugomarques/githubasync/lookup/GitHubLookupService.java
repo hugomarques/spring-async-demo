@@ -18,7 +18,6 @@ public class GitHubLookupService {
 
   private static final String GITHUB_API_ENDPOINT_TEMPLATE = "https://api.github.com/users/%s";
   private final RestTemplate restTemplate;
-  private final MeterRegistry meterRegistr;
   private Counter githubCounter;
 
   /**
@@ -30,18 +29,17 @@ public class GitHubLookupService {
    * @param meterRegistr This is injected automatically by Spring boot context. It is used by Spring
    *                     micrometer library to log metrics.
    */
-  public GitHubLookupService(RestTemplateBuilder restTemplateBuilder,
+  public GitHubLookupService(final RestTemplateBuilder restTemplateBuilder,
                              final MeterRegistry meterRegistr) {
     this.restTemplate = restTemplateBuilder.build();
-    this.meterRegistr = meterRegistr;
-    this.initOrderCounters();
+    this.initOrderCounters(meterRegistr);
   }
 
-  private void initOrderCounters() {
+  private void initOrderCounters(MeterRegistry meterRegistr) {
     githubCounter = Counter.builder("github.calls")
       .tag("API", "user")
       .description("The number of calls made to " + GITHUB_API_ENDPOINT_TEMPLATE)
-      .register(this.meterRegistr);
+      .register(meterRegistr);
   }
 
   /**
